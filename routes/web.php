@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('create',[DocumentController::class,'create']);
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/',[DocumentController::class,'index'])->name('index');
+
+Route::get('create',[DocumentController::class,'create'])->name('create');
+Route::post('create',[DocumentController::class,'store'])->name('store');

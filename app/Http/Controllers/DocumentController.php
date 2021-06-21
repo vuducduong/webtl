@@ -14,17 +14,19 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $documents = Document::all();
+        return view('index',compact('documents'));   
+     }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view('create.blade')
+    public function create(){
+
+        return view('create');
+
     }
 
     /**
@@ -35,10 +37,20 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'file' => 'required|mimes:csv,txt,xlx,xls,pdf|max:2048'
+        ]);
         $document = new Document();
-        $document->name = $request->name;
-        $document->
-        $document->save();
+
+        if($request->file()){
+            $fileName = time().'_'.$request->file->getClientOriginalName();
+            $filePath =  $request->file('file')->storeAs('uploads', $fileName, 'public');
+
+            $document->name = $request->name;
+            $document->path = '/storage/' . $filePath;
+            $document->save();
+        }
+
         return redirect()->route('index');
     }
 
