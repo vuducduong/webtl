@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-Route::get('/',[DocumentController::class,'index'])->name('index');
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('index',[DocumentController::class,'index'])->name('index');
+Route::get('detail/{id}',[DocumentController::class,'show'])->name('detail');
+
 
 Route::get('create',[DocumentController::class,'create'])->name('create');
 Route::post('create',[DocumentController::class,'store'])->name('store');

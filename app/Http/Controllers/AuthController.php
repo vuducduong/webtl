@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,12 +13,12 @@ class AuthController extends Controller
     }
 
     public function loginSuccess(Request $request) {
-        $user = [
+        $cri = [
             'email' => $request->email,
             'password' => $request->password
         ];
-        // dd($user);
-        if(Auth::attempt($user)){
+        
+        if(Auth::attempt($cri)){
             return redirect()->route('index');
         }
         return redirect()->route('login');

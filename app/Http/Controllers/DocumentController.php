@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
@@ -14,6 +20,9 @@ class DocumentController extends Controller
      */
     public function index()
     {
+        // if (! Gate::allows('isAdmin')) {
+        //     abort(403);
+        // }
         $documents = Document::all();
         return view('index',compact('documents'));   
      }
@@ -37,20 +46,31 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:csv,txt,xlx,xls,pdf|max:2048'
-        ]);
+        
+        // $request->validate([
+        //     'path' => 'required|mimes:csv,txt,xlx,xls,pdf|max:2048'
+        // ]);
         $document = new Document();
 
-        if($request->file()){
-            $fileName = time().'_'.$request->file->getClientOriginalName();
-            $filePath =  $request->file('file')->storeAs('uploads', $fileName, 'public');
+        // if($request->file()){
+        //     $fileName = time().'_'.$request->file->getClientOriginalName();
+        //     $filePath =  $request->file('file')->storeAs('uploads', $fileName, 'public');
 
-            $document->name = $request->name;
-            $document->path = '/storage/' . $filePath;
-            $document->save();
-        }
+        //     $document->name = $request->name;
+        //     $document->path = '/storage/' . $filePath;
+        //     $document->user_id = Auth::id();
+        //     $document->save();
+        // }
+        // $path = Storage::putFile('public', $request->file('path'));
+            $name = $request -> file('path') -> getClientOriginalName();
+            dd($name);
+            $request -> file('path')->storeAs('public/img', $name);
+        // $path = $request->file('path')->store('public');    
+        $document->name = $request->input('name');
+        $document->path = $name;
 
+
+        $document->save();
         return redirect()->route('index');
     }
 
@@ -60,9 +80,13 @@ class DocumentController extends Controller
      * @param  \App\Models\Document  $document
      * @return \Illuminate\Http\Response
      */
-    public function show(Document $document)
+    public function show($id)
     {
-        //
+        $data = Document::findorfail($id);
+        // dd($document->path);
+        // $pathDecoded = Document::get(storage_path($document->path));
+      
+        return view('detail',compact('data'));
     }
 
     /**
