@@ -11,17 +11,19 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-        <form method="post" enctype="multipart/form-data">
-            @csrf
-            <div class="form-group">
-                <label for="exampleInputEmail1">Name</label>
-                <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Name">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Document</label>
-                <input type="file" name="path" class="form-control"  >
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+    <form class="mt-4" method="post" >
+        @csrf
+        <div class="form-group">
+            <input type="email" name="email" class="form-control mb-0" id="exampleInputEmail1" placeholder="Enter email" autocomplete="off" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" class="form-control mb-0" id="exampleInputPassword2" placeholder="Password" required>
+        </div>
+
+        <div class="sign-info">
+            <button type="submit" class="btn btn-hover">Sign in</button>
+            
+        </div>
+    </form>
 </body>
 </html>

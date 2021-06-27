@@ -12,7 +12,7 @@ class Document extends Model
     protected $fillable = [
         'name',
         'path',
-        // 'user_id'
+        'user_id'
     ];
 
 
