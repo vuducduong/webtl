@@ -48,7 +48,7 @@ class DocumentController extends Controller
     {
         
         // $request->validate([
-        //     'path' => 'required|mimes:csv,txt,xlx,xls,pdf|max:2048'
+        //     'path' => 'required|mimes:csv,txt,xlx,xls,pdf,png|max:2048'
         // ]);
         $document = new Document();
 
@@ -61,15 +61,11 @@ class DocumentController extends Controller
         //     $document->user_id = Auth::id();
         //     $document->save();
         // }
-        // $path = Storage::putFile('public', $request->file('path'));
-            $name = $request -> file('path') -> getClientOriginalName();
-            dd($name);
-            $request -> file('path')->storeAs('public/img', $name);
-        // $path = $request->file('path')->store('public');    
+        $name = $request -> file('path') -> getClientOriginalName();
+        $request -> file('path')->storeAs('public/img', $name);
         $document->name = $request->input('name');
         $document->path = $name;
-
-
+        $document->user_id = Auth::id();
         $document->save();
         return redirect()->route('index');
     }
@@ -83,9 +79,9 @@ class DocumentController extends Controller
     public function show($id)
     {
         $data = Document::findorfail($id);
-        // dd($document->path);
-        // $pathDecoded = Document::get(storage_path($document->path));
-      
+        if (!Gate::allows('view_detail',$data)) {
+            abort(403);
+        }
         return view('detail',compact('data'));
     }
 
