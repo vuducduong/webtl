@@ -21,6 +21,14 @@
                 <label for="exampleInputPassword1">Document</label>
                 <input type="file" name="path" class="form-control"  >
             </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Status</label>
+                {{-- <input type="text" name="status" class="form-control"  > --}}
+                <select name="status" id="">
+                    <option value="private">Private</option>
+                    <option value="public">Public</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 </body>

@@ -66,6 +66,7 @@ class DocumentController extends Controller
         $document->name = $request->input('name');
         $document->path = $name;
         $document->user_id = Auth::id();
+        $document->status = $request->status;
         $document->save();
         return redirect()->route('index');
     }
@@ -79,7 +80,9 @@ class DocumentController extends Controller
     public function show($id)
     {
         $data = Document::findorfail($id);
-        if (!Gate::allows('view_detail',$data)) {
+        // thỏa mãn đồng thời vừa là tài liệu ở chế độ riêng tư
+        // và vừa không phải là người upload tài liệu 
+        if($data->status == 'private' && Gate::allows('private', $data) ){
             abort(403);
         }
         return view('detail',compact('data'));
