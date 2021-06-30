@@ -7,12 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <table>
-    {{-- @foreach ($pathDecoded as $item)
-        $item
-    @endforeach --}}
+    
 
-    <iframe src="{{url('storage/img/'.$data->path)}}" frameborder="0"></iframe>
+    <img src="{{url('storage/img/'.$data->path)}}" width="100px">
     </table>
 </body>
 </html>
