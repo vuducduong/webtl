@@ -31,7 +31,9 @@
                                             <td>{{$document->name}}</td>
                                             <td>{{$document->path}}</td>
                                             <td><a href="{{route('detail',$document->id)}}" class="btn btn-warning">Detail</a>
-
+                                            <a href="{{route('edit',$document->id)}}" class="btn btn-warning">Edit</a>
+                                            <a href="{{route('destroy',$document->id)}}" class="btn btn-danger">Delete</a>
+                                        </td>
                                         </tr>
                                     @endforeach
                                     </tbody>

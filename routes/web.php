@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocumentController;
+use App\Models\Document;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +28,6 @@ Route::post('create',[DocumentController::class,'store'])->name('store');
 
 Route::get('login',[AuthController::class,'login'])->name('login');
 Route::post('login',[AuthController::class,'loginSuccess'])->name('success');
+Route::get('edit/{id}',[DocumentController::class, 'edit'])->name('edit');
+Route::post('update/{id}',[DocumentController::class,'update'])->name('update');
+Route::get('delete/{id}',[DocumentController::class,'destroy'])->name('destroy');

@@ -19,6 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->string('path');
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
+            $table->softDeletes(); // add
         });
     }
 

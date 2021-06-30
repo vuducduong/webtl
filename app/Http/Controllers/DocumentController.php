@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -20,9 +21,6 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        // if (! Gate::allows('isAdmin')) {
-        //     abort(403);
-        // }
         $documents = Document::all();
         return view('index',compact('documents'));   
      }
@@ -51,16 +49,6 @@ class DocumentController extends Controller
         //     'path' => 'required|mimes:csv,txt,xlx,xls,pdf,png|max:2048'
         // ]);
         $document = new Document();
-
-        // if($request->file()){
-        //     $fileName = time().'_'.$request->file->getClientOriginalName();
-        //     $filePath =  $request->file('file')->storeAs('uploads', $fileName, 'public');
-
-        //     $document->name = $request->name;
-        //     $document->path = '/storage/' . $filePath;
-        //     $document->user_id = Auth::id();
-        //     $document->save();
-        // }
         $name = $request -> file('path') -> getClientOriginalName();
         $request -> file('path')->storeAs('public/img', $name);
         $document->name = $request->input('name');
@@ -81,8 +69,8 @@ class DocumentController extends Controller
     {
         $data = Document::findorfail($id);
         // thỏa mãn đồng thời vừa là tài liệu ở chế độ riêng tư
-        // và vừa không phải là người upload tài liệu 
-        if($data->status == 'private' && Gate::allows('private', $data) ){
+        // và không phải là người upload tài liệu, admin vẫn xem được tài liệu riêng tư
+        if($data->status == 'private' && Gate::allows('access_rights', $data) && Gate::allows('isUser')){
             abort(403);
         }
         return view('detail',compact('data'));
@@ -94,9 +82,14 @@ class DocumentController extends Controller
      * @param  \App\Models\Document  $document
      * @return \Illuminate\Http\Response
      */
-    public function edit(Document $document)
+    public function edit($id)
     {
-        //
+        
+        $document = Document::findorfail($id);
+        if(Gate::allows('access_rights', $document) && !Gate::allows('isAdmin')){
+            abort(403);
+        }
+        return view('edit',compact('document'));
     }
 
     /**
@@ -106,9 +99,19 @@ class DocumentController extends Controller
      * @param  \App\Models\Document  $document
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Document $document)
+    public function update(Request $request, $id)
     {
-        //
+
+        $document = Document::findorfail($id);
+        $name = $request -> file('path') -> getClientOriginalName();
+        $request -> file('path')->storeAs('public/img', $name);
+        $document->name = $request->input('name');
+        $document->path = $name;
+        $document->user_id = Auth::id();
+        $document->status = $request->status;
+        $document->save();
+        return redirect()->route('index');
+
     }
 
     /**
@@ -117,8 +120,10 @@ class DocumentController extends Controller
      * @param  \App\Models\Document  $document
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Document $document)
+    public function destroy($id)
     {
-        //
+        $document = Document::findorfail($id);
+        $document -> delete();
+        return redirect()->route('index');
     }
 }
